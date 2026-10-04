@@ -1,0 +1,10 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Edit Company</title><link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}"></head>
+<body><div class="container"><header class="header"><div class="badge">Placement Administration</div><h1>Edit Company</h1><p class="subtitle">Update this company profile.</p></header>
+<main class="main-card form-card">{% if error %}<div class="alert alert-error">{{ error }}</div>{% endif %}
+<form action="{{ url_for('edit_company', company_id=company_id) }}" method="POST" class="registration-form">
+<div class="form-group"><label for="company_name">Company Name *</label><input id="company_name" name="company_name" value="{{ form_data.get('company_name', '') }}" required></div>
+<div class="form-group"><label for="description">Company Description *</label><textarea id="description" name="description" rows="4" required>{{ form_data.get('description', '') }}</textarea></div>
+<div class="form-group"><label for="website">Website</label><input type="url" id="website" name="website" value="{{ form_data.get('website', '') }}"></div>
+<div class="form-actions"><button class="btn btn-primary" type="submit">Save Company</button><a href="{{ url_for('admin_companies') }}" class="btn btn-secondary">Cancel</a></div>
+</form></main></div></body></html>

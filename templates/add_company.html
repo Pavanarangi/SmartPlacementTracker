@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Add Company - Smart Placement Tracker">
+    <title>Add Company - Smart Placement Tracker</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <div class="badge">Company Setup</div>
+            <h1>Add Recruiting Company</h1>
+            <p class="subtitle">Enter details for a new recruiting company partner participating in campus placement drives.</p>
+        </header>
+
+        <main class="main-card form-card">
+            {% if error %}
+                <div class="alert alert-error">
+                    ⚠️ {{ error }}
+                </div>
+            {% endif %}
+
+            <form action="{{ url_for('add_company') }}" method="POST" class="registration-form">
+                <div class="form-group">
+                    <label for="company_name">Company Name *</label>
+                    <input type="text" id="company_name" name="company_name" value="{{ form_data.get('company_name', '') }}" placeholder="e.g. Google India" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="description">Company Description *</label>
+                    <textarea id="description" name="description" rows="4" placeholder="Brief description of the company, work culture, and domain..." required>{{ form_data.get('description', '') }}</textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="website">Company Website (Optional)</label>
+                    <input type="url" id="website" name="website" value="{{ form_data.get('website', '') }}" placeholder="https://www.example.com">
+                </div>
+
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary">Add Company</button>
+                    <a href="{{ url_for('admin') }}" class="btn btn-secondary">Back to Admin Dashboard</a>
+                    {% if session.get('user_id') %}
+                        <a href="{{ url_for('logout') }}" class="btn btn-secondary">Logout</a>
+                    {% endif %}
+                </div>
+
+            </form>
+        </main>
+
+        <footer class="footer">
+            <p>&copy; 2026 Smart Placement Tracker | Built with Flask &amp; CSS</p>
+        </footer>
+    </div>
+</body>
+</html>

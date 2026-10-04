@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Add Placement Drive - Smart Placement Tracker">
+    <title>Add Placement Drive - Smart Placement Tracker</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <div class="badge">Placement Setup</div>
+            <h1>Add Placement Drive</h1>
+            <p class="subtitle">Create a new placement drive and set eligibility criteria for job applicants.</p>
+        </header>
+
+        <main class="main-card form-card">
+            {% if error %}
+                <div class="alert alert-error">
+                    ⚠️ {{ error }}
+                </div>
+            {% endif %}
+
+            {% if not companies %}
+                <div class="alert alert-error" style="background-color: rgba(234, 179, 8, 0.15); color: #facc15; border-color: rgba(250, 204, 21, 0.3);">
+                    ℹ️ No companies found. Please <a href="{{ url_for('add_company') }}" style="color: #facc15; text-decoration: underline;">Add a Company</a> first before creating a placement drive.
+                </div>
+            {% endif %}
+
+            <form action="{{ url_for('add_drive') }}" method="POST" class="registration-form">
+                <!-- Company Selection -->
+                <div class="form-group">
+                    <label for="company_id">Select Company *</label>
+                    <select id="company_id" name="company_id" required>
+                        <option value="" disabled {% if not form_data.get('company_id') %}selected{% endif %}>-- Select a registered company --</option>
+                        {% for comp in companies %}
+                            <option value="{{ comp.id }}" {% if form_data.get('company_id')|string == comp.id|string %}selected{% endif %}>
+                                {{ comp.company_name }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <!-- Job Role -->
+                <div class="form-group">
+                    <label for="job_role">Job Role *</label>
+                    <input type="text" id="job_role" name="job_role" value="{{ form_data.get('job_role', '') }}" placeholder="e.g. Software Engineer" required>
+                </div>
+
+                <!-- Job Description -->
+                <div class="form-group">
+                    <label for="job_description">Job Description *</label>
+                    <textarea id="job_description" name="job_description" rows="3" placeholder="Describe key responsibilities and skill requirements..." required>{{ form_data.get('job_description', '') }}</textarea>
+                </div>
+
+                <!-- CTC / Package -->
+                <div class="form-group">
+                    <label for="ctc">CTC / Package *</label>
+                    <input type="text" id="ctc" name="ctc" value="{{ form_data.get('ctc', '') }}" placeholder="e.g. 7 LPA" required>
+                </div>
+
+                <h3 class="form-section-title">Eligibility Criteria</h3>
+
+                <div class="form-row">
+                    <!-- Minimum CGPA -->
+                    <div class="form-group">
+                        <label for="minimum_cgpa">Minimum CGPA (0 - 10) *</label>
+                        <input type="number" id="minimum_cgpa" name="minimum_cgpa" step="0.1" min="0" max="10" value="{{ form_data.get('minimum_cgpa', '') }}" placeholder="e.g. 7.5" required>
+                    </div>
+
+                    <!-- Graduation Year -->
+                    <div class="form-group">
+                        <label for="graduation_year">Graduation Year *</label>
+                        <input type="number" id="graduation_year" name="graduation_year" min="2020" max="2035" value="{{ form_data.get('graduation_year', '') }}" placeholder="e.g. 2026" required>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <!-- Backlogs Allowed -->
+                    <div class="form-group">
+                        <label for="backlogs_allowed">Max Backlogs Allowed *</label>
+                        <input type="number" id="backlogs_allowed" name="backlogs_allowed" min="0" max="20" value="{{ form_data.get('backlogs_allowed', '') }}" placeholder="e.g. 0" required>
+                    </div>
+
+                    <!-- Application Deadline -->
+                    <div class="form-group">
+                        <label for="application_deadline">Application Deadline *</label>
+                        <input type="date" id="application_deadline" name="application_deadline" value="{{ form_data.get('application_deadline', '') }}" required>
+                    </div>
+                </div>
+
+                <!-- Eligible Branches (Checkboxes) -->
+                <div class="form-group">
+                    <label>Eligible Branches (Select all that apply) *</label>
+                    <div class="checkbox-grid">
+                        {% set selected_branches = form_data.get('eligible_branches', []) %}
+                        <label class="checkbox-item"><input type="checkbox" name="eligible_branches" value="CSE" {% if 'CSE' in selected_branches %}checked{% endif %}> CSE — Computer Science & Eng.</label>
+                        <label class="checkbox-item"><input type="checkbox" name="eligible_branches" value="CSD" {% if 'CSD' in selected_branches %}checked{% endif %}> CSD — CS & Data Science</label>
+                        <label class="checkbox-item"><input type="checkbox" name="eligible_branches" value="CSM" {% if 'CSM' in selected_branches %}checked{% endif %}> CSM — CS & Machine Learning</label>
+                        <label class="checkbox-item"><input type="checkbox" name="eligible_branches" value="CAI" {% if 'CAI' in selected_branches %}checked{% endif %}> CAI — CS & AI</label>
+                        <label class="checkbox-item"><input type="checkbox" name="eligible_branches" value="IT" {% if 'IT' in selected_branches %}checked{% endif %}> IT — Information Technology</label>
+                        <label class="checkbox-item"><input type="checkbox" name="eligible_branches" value="ECE" {% if 'ECE' in selected_branches %}checked{% endif %}> ECE — Electronics & Comm.</label>
+                        <label class="checkbox-item"><input type="checkbox" name="eligible_branches" value="EEE" {% if 'EEE' in selected_branches %}checked{% endif %}> EEE — Electrical & Electronics</label>
+                        <label class="checkbox-item"><input type="checkbox" name="eligible_branches" value="ME" {% if 'ME' in selected_branches %}checked{% endif %}> ME — Mechanical Eng.</label>
+                        <label class="checkbox-item"><input type="checkbox" name="eligible_branches" value="Civil" {% if 'Civil' in selected_branches %}checked{% endif %}> Civil — Civil Eng.</label>
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary" {% if not companies %}disabled{% endif %}>Add Placement Drive</button>
+                    <a href="{{ url_for('admin') }}" class="btn btn-secondary">Back to Admin Dashboard</a>
+                    {% if session.get('user_id') %}
+                        <a href="{{ url_for('logout') }}" class="btn btn-secondary">Logout</a>
+                    {% endif %}
+                </div>
+
+            </form>
+        </main>
+
+        <footer class="footer">
+            <p>&copy; 2026 Smart Placement Tracker | Built with Flask &amp; CSS</p>
+        </footer>
+    </div>
+</body>
+</html>

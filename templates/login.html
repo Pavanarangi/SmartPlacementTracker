@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="User Login - Smart Placement Tracker">
+    <title>Account Login - Smart Placement Tracker</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <div class="badge">Firebase Authentication</div>
+            <h1>Account Login</h1>
+            <p class="subtitle">Sign in to access your placement tracker account and manage applications.</p>
+        </header>
+
+        <main class="main-card form-card">
+            {% if error %}
+                <div class="alert alert-error">
+                    ⚠️ {{ error }}
+                </div>
+            {% endif %}
+
+            <form action="{{ url_for('login') }}" method="POST" class="registration-form">
+                <div class="form-group">
+                    <label for="email">Email Address</label>
+                    <input type="email" id="email" name="email" value="{{ email }}" placeholder="e.g. student@example.com" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" name="password" placeholder="Enter your password" required>
+                </div>
+
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary">Sign In</button>
+                    <a href="{{ url_for('register') }}" class="btn btn-secondary">New Student? Register</a>
+                    <a href="{{ url_for('home') }}" class="btn btn-secondary">Home</a>
+                </div>
+            </form>
+        </main>
+
+        <footer class="footer">
+            <p>&copy; 2026 Smart Placement Tracker | Built with Flask &amp; CSS</p>
+        </footer>
+    </div>
+</body>
+</html>

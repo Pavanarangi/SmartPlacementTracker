@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Available Placement Drives - Smart Placement Tracker">
+    <title>Placement Drives & Eligibility - Smart Placement Tracker</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <div class="badge">Student Portal</div>
+            <h1>Campus Placement Drives</h1>
+            <p class="subtitle">Review open placement opportunities and your automatic eligibility status based on your academic profile.</p>
+        </header>
+
+        <main class="main-card">
+            {% if error %}
+                <div class="alert alert-error" style="text-align: left; margin-bottom: 1.5rem;">
+                    ⚠️ {{ error }}
+                </div>
+            {% endif %}
+
+            <!-- Student Information Card -->
+            {% if student %}
+                <div class="student-profile-banner">
+                    <div class="student-profile-header">
+                        <h2>👤 Registered Student Profile</h2>
+                        <a href="{{ url_for('student_profile') }}" class="edit-link">View Profile</a>
+                    </div>
+
+                    <div class="student-details-grid">
+                        <div class="student-detail-item">
+                            <span class="detail-label">Name:</span>
+                            <span class="detail-value">{{ student.name }}</span>
+                        </div>
+                        <div class="student-detail-item">
+                            <span class="detail-label">Branch:</span>
+                            <span class="detail-value">{{ student.branch }}</span>
+                        </div>
+                        <div class="student-detail-item">
+                            <span class="detail-label">CGPA:</span>
+                            <span class="detail-value">{{ student.cgpa }}</span>
+                        </div>
+                        <div class="student-detail-item">
+                            <span class="detail-label">Graduation Year:</span>
+                            <span class="detail-value">{{ student.graduation_year }}</span>
+                        </div>
+                        <div class="student-detail-item">
+                            <span class="detail-label">Backlogs:</span>
+                            <span class="detail-value">{{ student.backlogs }}</span>
+                        </div>
+                    </div>
+                </div>
+            {% else %}
+                <div class="alert alert-error" style="background-color: rgba(234, 179, 8, 0.15); color: #facc15; border-color: rgba(250, 204, 21, 0.3); text-align: left; margin-bottom: 2rem;">
+                    ℹ️ <strong>No student profile found.</strong> Please <a href="{{ url_for('register') }}" style="color: #facc15; text-decoration: underline; font-weight: 600;">Register as a student first</a> to view your automatic eligibility for placement drives.
+                </div>
+            {% endif %}
+
+            <!-- Placement Drives Section -->
+            <h2 class="section-heading" style="text-align: left; margin-top: 1.5rem;">Available Placement Drives</h2>
+
+            {% if not drives %}
+                <div class="empty-state">
+                    <div class="empty-icon">📂</div>
+                    <p>No placement drives are currently available.</p>
+                </div>
+            {% else %}
+                <div class="drives-list">
+                    {% for item in drives %}
+                        {% set drive = item.drive %}
+                        <div class="drive-card {% if item.already_applied %}applied-card{% elif item.is_open == False %}ineligible-card{% elif item.is_eligible %}eligible-card{% else %}ineligible-card{% endif %}">
+                            <div class="drive-card-header">
+                                <div>
+                                    <h3 class="drive-title">{{ drive.job_role }}</h3>
+                                    <span class="company-name">🏢 {{ drive.company_name }}</span>
+                                    <p><a href="{{ url_for('student_drive_detail', drive_id=drive.id) }}" class="btn btn-secondary" style="margin-top: .5rem;">View Drive Details</a></p>
+                                </div>
+                                <div class="eligibility-status-tag">
+                                    {% if item.already_applied %}
+                                        <span class="badge-applied status-badge-{{ item.application_status | lower }}">✓ {{ item.application_status }}</span>
+                                    {% elif item.is_open == False %}
+                                        <span class="status-badge status-rejected" style="background-color: rgba(239, 68, 68, 0.15); color: #ef4444; border: 1px solid rgba(239, 68, 68, 0.3);">Deadline Passed</span>
+                                    {% elif item.is_eligible %}
+                                        <span class="badge-eligible">✓ Eligible</span>
+                                    {% else %}
+                                        <span class="badge-ineligible">✗ Not Eligible</span>
+                                    {% endif %}
+                                </div>
+                            </div>
+
+                            <p class="drive-description">{{ drive.job_description }}</p>
+
+                            <div class="drive-specs-grid">
+                                <div class="spec-item">
+                                    <span class="spec-label">CTC / Package:</span>
+                                    <span class="spec-value highlight-ctc">{{ drive.ctc }}</span>
+                                </div>
+                                <div class="spec-item">
+                                    <span class="spec-label">Min CGPA:</span>
+                                    <span class="spec-value">{{ drive.minimum_cgpa }}</span>
+                                </div>
+                                <div class="spec-item">
+                                    <span class="spec-label">Eligible Branches:</span>
+                                    <span class="spec-value">{{ drive.eligible_branches | join(', ') }}</span>
+                                </div>
+                                <div class="spec-item">
+                                    <span class="spec-label">Grad Year:</span>
+                                    <span class="spec-value">{{ drive.graduation_year }}</span>
+                                </div>
+                                <div class="spec-item">
+                                    <span class="spec-label">Max Backlogs:</span>
+                                    <span class="spec-value">{{ drive.backlogs_allowed }}</span>
+                                </div>
+                                <div class="spec-item">
+                                    <span class="spec-label">Deadline:</span>
+                                    <span class="spec-value">{{ drive.application_deadline }}</span>
+                                </div>
+                            </div>
+
+                            <!-- Application Action / Status Footer -->
+                            <div class="drive-card-footer">
+                                {% if item.already_applied %}
+                                    <div class="applied-status-bar status-bar-{{ item.application_status | lower }}">
+                                        <span class="status-applied-text">Status: <strong>{{ item.application_status }}</strong></span>
+                                    </div>
+                                {% elif item.is_open == False %}
+                                    <div style="margin-top: 0.5rem;">
+                                        <button class="btn btn-secondary disabled-btn" style="width: 100%; background-color: rgba(239, 68, 68, 0.15); color: #ef4444; border-color: rgba(239, 68, 68, 0.3);" disabled>Deadline Passed — Cannot Apply</button>
+                                    </div>
+                                {% elif item.is_eligible %}
+                                    <form action="{{ url_for('apply_drive', drive_id=drive.id) }}" method="POST">
+                                        <button type="submit" class="btn btn-primary btn-apply">Apply Now</button>
+                                    </form>
+                                {% else %}
+                                    <!-- Ineligibility Reasons -->
+                                    {% if student %}
+                                        <div class="ineligibility-box">
+                                            <span class="ineligibility-title">Reason(s) for Ineligibility:</span>
+                                            <ul class="reasons-list">
+                                                {% for reason in item.reasons %}
+                                                    <li>• {{ reason }}</li>
+                                                {% endfor %}
+                                            </ul>
+                                        </div>
+                                    {% endif %}
+                                    <div style="margin-top: 0.75rem;">
+                                        <button class="btn btn-secondary disabled-btn" style="width: 100%;" disabled>Not Eligible — Cannot Apply</button>
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+
+            <div class="cta-container" style="margin-top: 2.5rem;">
+                <a href="{{ url_for('home') }}" class="btn btn-secondary">Home</a>
+                {% if session.get('user_id') %}
+                    <a href="{{ url_for('student_applications') }}" class="btn btn-primary">My Applications</a>
+                    <a href="{{ url_for('student_profile') }}" class="btn btn-secondary">My Profile</a>
+                    <a href="{{ url_for('logout') }}" class="btn btn-secondary">Logout</a>
+                {% endif %}
+            </div>
+
+        </main>
+
+        <footer class="footer">
+            <p>&copy; 2026 Smart Placement Tracker | Built with Flask &amp; CSS</p>
+        </footer>
+    </div>
+</body>
+</html>

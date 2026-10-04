@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Student Registration - Smart Placement Tracker">
+    <title>Student Registration - Smart Placement Tracker</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <div class="badge">Student Onboarding</div>
+            <h1>Student Registration</h1>
+            <p class="subtitle">Enter your academic details to get started with your placement tracking profile.</p>
+        </header>
+
+        <main class="main-card form-card">
+            {% if error %}
+                <div class="alert alert-error">
+                    ⚠️ {{ error }}
+                </div>
+            {% endif %}
+
+            <form action="{{ url_for('register') }}" method="POST" class="registration-form">
+                <div class="form-group">
+                    <label for="full_name">Full Name</label>
+                    <input type="text" id="full_name" name="full_name" value="{{ form_data.get('full_name', '') }}" placeholder="e.g. Rahul Sharma" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="email">Email Address</label>
+                    <input type="email" id="email" name="email" value="{{ form_data.get('email', '') }}" placeholder="e.g. rahul@example.com" required>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="password">Password</label>
+                        <input type="password" id="password" name="password" placeholder="At least 6 characters" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="confirm_password">Confirm Password</label>
+                        <input type="password" id="confirm_password" name="confirm_password" placeholder="Re-enter password" required>
+                    </div>
+                </div>
+
+
+                <div class="form-group">
+                    <label for="branch">Branch / Department</label>
+                    <select id="branch" name="branch" required>
+                        <option value="" disabled {% if not form_data.get('branch') %}selected{% endif %}>Select your branch</option>
+                        <option value="CSE" {% if form_data.get('branch') == 'CSE' %}selected{% endif %}>CSE — Computer Science and Engineering</option>
+                        <option value="CSD" {% if form_data.get('branch') == 'CSD' %}selected{% endif %}>CSD — Computer Science and Data Science</option>
+                        <option value="CSM" {% if form_data.get('branch') == 'CSM' %}selected{% endif %}>CSM — Computer Science and Machine Learning</option>
+                        <option value="CAI" {% if form_data.get('branch') == 'CAI' %}selected{% endif %}>CAI — Computer Science and Artificial Intelligence</option>
+                        <option value="IT" {% if form_data.get('branch') == 'IT' %}selected{% endif %}>IT — Information Technology</option>
+                        <option value="ECE" {% if form_data.get('branch') == 'ECE' %}selected{% endif %}>ECE — Electronics and Communication Engineering</option>
+                        <option value="EEE" {% if form_data.get('branch') == 'EEE' %}selected{% endif %}>EEE — Electrical and Electronics Engineering</option>
+                        <option value="ME" {% if form_data.get('branch') == 'ME' %}selected{% endif %}>ME — Mechanical Engineering</option>
+                        <option value="Civil" {% if form_data.get('branch') == 'Civil' %}selected{% endif %}>Civil — Civil Engineering</option>
+                    </select>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="cgpa">CGPA (0 - 10)</label>
+                        <input type="number" id="cgpa" name="cgpa" step="0.01" min="0" max="10" value="{{ form_data.get('cgpa', '') }}" placeholder="e.g. 8.5" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="graduation_year">Graduation Year</label>
+                        <input type="number" id="graduation_year" name="graduation_year" min="2020" max="2035" value="{{ form_data.get('graduation_year', '') }}" placeholder="e.g. 2026" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="backlogs">Number of Backlogs</label>
+                    <input type="number" id="backlogs" name="backlogs" min="0" max="20" value="{{ form_data.get('backlogs', '') }}" placeholder="e.g. 0" required>
+                </div>
+
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary">Register Student</button>
+                    <a href="{{ url_for('home') }}" class="btn btn-secondary">Back to Home</a>
+                </div>
+            </form>
+        </main>
+
+        <footer class="footer">
+            <p>&copy; 2026 Smart Placement Tracker | Built with Flask &amp; CSS</p>
+        </footer>
+    </div>
+</body>
+</html>

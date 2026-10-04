@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Manage Student Applications - Smart Placement Tracker">
+    <title>Manage Student Applications - Smart Placement Tracker</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container" style="max-width: 1150px;">
+        <header class="header">
+            <div class="badge">Placement Administration</div>
+            <h1>Applications</h1>
+            <p class="subtitle">Review submitted student applications, filter records, and update recruitment selection statuses.</p>
+        </header>
+
+        <main class="main-card">
+            {% if error %}
+                <div class="alert alert-error" style="text-align: left; margin-bottom: 1.5rem;">
+                    ⚠️ {{ error }}
+                </div>
+            {% endif %}
+
+            <!-- Filter Controls -->
+            <form method="GET" action="{{ url_for('admin_applications') }}" class="filter-bar" style="display: flex; gap: 1rem; align-items: flex-end; flex-wrap: wrap; margin-bottom: 1.5rem; background: rgba(255,255,255,0.03); padding: 1.25rem; border-radius: 12px; border: 1px solid rgba(255,255,255,0.08);">
+                <div class="form-group" style="margin-bottom: 0; flex: 1.5; min-width: 200px;">
+                    <label for="q" style="font-size: 0.85rem; font-weight: 600; margin-bottom: 0.35rem; display: block; color: #94a3b8;">Search Keyword</label>
+                    <input type="text" id="q" name="q" value="{{ search_q if search_q else '' }}" placeholder="Search student name or job role..." style="width: 100%; padding: 0.6rem 0.8rem; border-radius: 8px; background: #0f172a; border: 1px solid #334155; color: #f8fafc;">
+                </div>
+
+                <div class="form-group" style="margin-bottom: 0; flex: 1; min-width: 160px;">
+                    <label for="status" style="font-size: 0.85rem; font-weight: 600; margin-bottom: 0.35rem; display: block; color: #94a3b8;">Filter by Status</label>
+                    <select id="status" name="status" style="width: 100%; padding: 0.6rem 0.8rem; border-radius: 8px; background: #0f172a; border: 1px solid #334155; color: #f8fafc;">
+                        <option value="All" {% if selected_status == 'All' or not selected_status %}selected{% endif %}>All Statuses</option>
+                        {% for s in allowed_statuses %}
+                            <option value="{{ s }}" {% if selected_status == s %}selected{% endif %}>{{ s }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="form-group" style="margin-bottom: 0; flex: 1; min-width: 160px;">
+                    <label for="company" style="font-size: 0.85rem; font-weight: 600; margin-bottom: 0.35rem; display: block; color: #94a3b8;">Filter by Company</label>
+                    <select id="company" name="company" style="width: 100%; padding: 0.6rem 0.8rem; border-radius: 8px; background: #0f172a; border: 1px solid #334155; color: #f8fafc;">
+                        <option value="All" {% if selected_company == 'All' or not selected_company %}selected{% endif %}>All Companies</option>
+                        {% for c in companies_list %}
+                            <option value="{{ c.company_name }}" {% if selected_company == c.company_name %}selected{% endif %}>{{ c.company_name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div style="display: flex; gap: 0.5rem;">
+                    <button type="submit" class="btn btn-primary" style="padding: 0.6rem 1.25rem;">Search / Filter</button>
+                    <a href="{{ url_for('admin_applications') }}" class="btn btn-secondary" style="padding: 0.6rem 1rem;">Reset</a>
+                </div>
+            </form>
+            <div style="margin: 0 0 1.5rem;">
+                <a class="btn btn-primary" href="{{ url_for('export_applications_csv', q=search_q, status=selected_status, company=selected_company) }}">Export filtered results as CSV</a>
+            </div>
+
+            {% if not applications_data %}
+                <div class="empty-state">
+                    <div class="empty-icon">📋</div>
+                    <p>{% if search_q or (selected_status and selected_status != 'All') or (selected_company and selected_company != 'All') %}No applications found for the selected filters.{% else %}No applications have been submitted yet.{% endif %}</p>
+                </div>
+            {% else %}
+                <div class="table-responsive">
+                    <table class="admin-table">
+                        <thead>
+                            <tr>
+                                <th>App ID</th>
+                                <th>Student Name</th>
+                                <th>Email</th>
+                                <th>Branch</th>
+                                <th>Company</th>
+                                <th>Job Role</th>
+                                <th>Applied Date</th>
+                                <th>Current Status</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for item in applications_data %}
+                                <tr>
+                                    <td class="font-mono">#APP-{{ item.id }}</td>
+                                    <td class="font-bold">{{ item.student_name }}</td>
+                                    <td>{{ item.student_email }}</td>
+                                    <td><span class="branch-pill">{{ item.student_branch }}</span></td>
+                                    <td>{{ item.company_name }}</td>
+                                    <td>{{ item.job_role }}</td>
+                                    <td>{{ item.applied_date }}</td>
+                                    <td>
+                                        <span class="status-badge status-{{ item.status | lower }}">
+                                            {{ item.status }}
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <div style="display: flex; gap: 0.4rem; align-items: center; flex-wrap: wrap;">
+                                            <form action="{{ url_for('update_application_status', application_id=item.id) }}" method="POST" class="status-update-form" style="display: flex; gap: 0.3rem;">
+                                                <select name="status" class="status-select">
+                                                    {% for s in allowed_statuses %}
+                                                        <option value="{{ s }}" {% if item.status == s %}selected{% endif %}>{{ s }}</option>
+                                                    {% endfor %}
+                                                </select>
+                                                <button type="submit" class="btn btn-sm btn-primary">Update</button>
+                                            </form>
+                                            <a href="{{ url_for('admin_application_detail', application_id=item.id) }}" class="btn btn-sm btn-secondary" style="padding: 0.35rem 0.65rem; font-size: 0.8rem;">View Details</a>
+                                        </div>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% endif %}
+
+            <div class="cta-container" style="margin-top: 2.5rem;">
+                <a href="{{ url_for('admin') }}" class="btn btn-secondary">Back to Admin Dashboard</a>
+                {% if session.get('user_id') %}
+                    <a href="{{ url_for('logout') }}" class="btn btn-secondary">Logout</a>
+                {% endif %}
+            </div>
+        </main>
+
+        <footer class="footer">
+            <p>&copy; 2026 Smart Placement Tracker | Built with Flask &amp; CSS</p>
+        </footer>
+    </div>
+</body>
+</html>

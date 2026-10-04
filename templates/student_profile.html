@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="My Profile - Smart Placement Tracker">
+    <title>My Profile - Smart Placement Tracker</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <div class="badge">Student Profile</div>
+            <h1>My Profile</h1>
+            <p class="subtitle">View your registered academic details used for placement drive eligibility evaluation.</p>
+        </header>
+
+        <main class="main-card">
+            {% if error %}
+                <div class="alert alert-error" style="text-align: left; margin-bottom: 1.5rem;">
+                    ⚠️ {{ error }}
+                </div>
+            {% endif %}
+
+            {% if success %}
+                <div class="alert alert-success" style="text-align: left; margin-bottom: 1.5rem; background-color: rgba(16, 185, 129, 0.15); color: #34d399; border: 1px solid rgba(52, 211, 153, 0.3); padding: 1rem; border-radius: 8px;">
+                    ✅ {{ success }}
+                </div>
+            {% endif %}
+
+            {% if student %}
+                <div class="student-profile-banner">
+                    <div class="student-profile-header">
+                        <h2>👤 Student Information (View Only)</h2>
+                    </div>
+                    <div class="student-details-grid">
+                        <div class="student-detail-item">
+                            <span class="detail-label">Full Name:</span>
+                            <span class="detail-value">{{ student.name }}</span>
+                        </div>
+                        <div class="student-detail-item">
+                            <span class="detail-label">Email Address:</span>
+                            <span class="detail-value">{{ student.email }}</span>
+                        </div>
+                        <div class="student-detail-item">
+                            <span class="detail-label">Branch:</span>
+                            <span class="detail-value">{{ student.branch }}</span>
+                        </div>
+                        <div class="student-detail-item">
+                            <span class="detail-label">CGPA:</span>
+                            <span class="detail-value">{{ student.cgpa }}</span>
+                        </div>
+                        <div class="student-detail-item">
+                            <span class="detail-label">Graduation Year:</span>
+                            <span class="detail-value">{{ student.graduation_year }}</span>
+                        </div>
+                        <div class="student-detail-item">
+                            <span class="detail-label">Backlogs:</span>
+                            <span class="detail-value">{{ student.backlogs }}</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Resume Section -->
+                <div class="student-profile-banner" style="margin-top: 1.5rem;">
+                    <div class="student-profile-header">
+                        <h2>📄 Resume</h2>
+                    </div>
+                    {% if student.get('resume_link') %}
+                        <div style="padding: 1rem 0;">
+                            <p style="color: #34d399; font-weight: 500; margin-bottom: 1rem;">
+                                ✅ Resume link saved.
+                            </p>
+                            <div style="margin-bottom: 1.5rem;">
+                                <a href="{{ student.resume_link }}" target="_blank" rel="noopener noreferrer" class="btn btn-secondary" style="display: inline-block;">Open Resume</a>
+                            </div>
+
+                            <form action="{{ url_for('save_resume_link') }}" method="POST" style="margin-top: 1rem;">
+                                <div class="form-group">
+                                    <label for="resume_link">Update Resume Link (Google Drive, OneDrive, etc.) *</label>
+                                    <input type="url" id="resume_link" name="resume_link" value="{{ student.resume_link }}" placeholder="https://drive.google.com/..." required style="margin-bottom: 1rem;">
+                                </div>
+                                <button type="submit" class="btn btn-primary">Update Resume Link</button>
+                            </form>
+                        </div>
+                    {% else %}
+                        <div style="padding: 1rem 0;">
+                            <p style="color: #9ca3af; margin-bottom: 1rem;">No resume link added yet.</p>
+                            <form action="{{ url_for('save_resume_link') }}" method="POST">
+                                <div class="form-group">
+                                    <label for="resume_link">Resume Shareable Link (Google Drive, OneDrive, etc.) *</label>
+                                    <input type="url" id="resume_link" name="resume_link" placeholder="https://drive.google.com/..." required style="margin-bottom: 1rem;">
+                                </div>
+                                <button type="submit" class="btn btn-primary">Save Resume Link</button>
+                            </form>
+                        </div>
+                    {% endif %}
+                </div>
+            {% else %}
+                <div class="alert alert-error">
+                    ⚠️ No student profile found for your account.
+                </div>
+            {% endif %}
+
+            <div class="cta-container" style="margin-top: 2.5rem;">
+                <a href="{{ url_for('student_drives') }}" class="btn btn-primary" style="background-color: #10b981;">Placement Drives</a>
+                <a href="{{ url_for('student_applications') }}" class="btn btn-primary">My Applications</a>
+                <a href="{{ url_for('logout') }}" class="btn btn-secondary">Logout</a>
+            </div>
+        </main>
+
+        <footer class="footer">
+            <p>&copy; 2026 Smart Placement Tracker | Built with Flask &amp; CSS</p>
+        </footer>
+    </div>
+</body>
+</html>

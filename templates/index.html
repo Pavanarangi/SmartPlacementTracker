@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Smart Placement Tracker - Track and manage campus placement applications effortlessly.">
+    <title>Smart Placement Tracker</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <div class="badge">Beginner Friendly</div>
+            <h1>Smart Placement Tracker</h1>
+            <p class="subtitle">Streamline your placement drive journey, application statuses, and interview schedules in one central dashboard.</p>
+        </header>
+
+        <main class="main-card">
+            <h2>Welcome to your Tracker</h2>
+            <p>Your placement tracking application is initialized and ready. Additional features will be integrated step-by-step.</p>
+            
+            <div class="features-preview">
+                <div class="feature-box">
+                    <span class="icon">💼</span>
+                    <h3>Job Applications</h3>
+                    <p>Log and monitor upcoming placement drives and company applications.</p>
+                </div>
+                <div class="feature-box">
+                    <span class="icon">📊</span>
+                    <h3>Status Insights</h3>
+                    <p>Keep track of application stages from Applied to Interview & Offer.</p>
+                </div>
+                <div class="feature-box">
+                    <span class="icon">🎯</span>
+                    <h3>Goal Readiness</h3>
+                    <p>Organize your interview preparations and deadline reminders.</p>
+                </div>
+            <div class="cta-container">
+                {% if session.get('user_id') %}
+                    {% if session.get('role') == 'student' %}
+                        <a href="{{ url_for('student_drives') }}" class="btn btn-primary" style="background-color: #10b981;">Placement Drives</a>
+                        <a href="{{ url_for('student_applications') }}" class="btn btn-primary">My Applications</a>
+                        <a href="{{ url_for('student_profile') }}" class="btn btn-secondary">My Profile</a>
+                    {% elif session.get('role') == 'admin' %}
+                        <a href="{{ url_for('admin') }}" class="btn btn-primary">Admin Dashboard</a>
+                    {% endif %}
+                    <a href="{{ url_for('logout') }}" class="btn btn-secondary">Logout ({{ session.get('name', 'User') }})</a>
+                {% else %}
+                    <a href="{{ url_for('login') }}" class="btn btn-primary" style="background-color: #4f46e5;">Sign In</a>
+                    <a href="{{ url_for('register') }}" class="btn btn-primary">Register as a Student</a>
+                {% endif %}
+            </div>
+
+
+
+        </main>
+
+        <footer class="footer">
+            <p>&copy; 2026 Smart Placement Tracker | Built with Flask &amp; CSS</p>
+        </footer>
+    </div>
+</body>
+</html>

@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Admin Dashboard - Smart Placement Tracker">
+    <title>Admin Dashboard - Smart Placement Tracker</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <div class="badge">Placement Administration</div>
+            <h1>Admin Dashboard</h1>
+            <p class="subtitle">Manage recruiting companies, active campus placement drives, and student job applications from a unified portal.</p>
+        </header>
+
+        <main class="main-card">
+            <!-- Metric Summary Cards -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <span class="stat-number">{{ companies_count if companies_count is defined else 0 }}</span>
+                    <span class="stat-label">Total Companies</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number">{{ drives_count if drives_count is defined else 0 }}</span>
+                    <span class="stat-label">Active Placement Drives</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number">{{ apps_count if apps_count is defined else 0 }}</span>
+                    <span class="stat-label">Total Applications</span>
+                </div>
+            </div>
+
+            <h2 class="section-heading">Admin Management Actions</h2>
+            
+            <!-- Action Cards -->
+            <div class="action-grid" style="grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));">
+                <div class="action-card">
+                    <div class="action-icon">🏢</div>
+                    <h3>Add Company</h3>
+                    <p>Register new recruitment partners.</p>
+                    <a href="{{ url_for('add_company') }}" class="btn btn-primary" style="margin-top: 1rem;">Add Company</a>
+                </div>
+
+                <div class="action-card">
+                    <div class="action-icon">📊</div>
+                    <h3>Manage Companies</h3>
+                    <p>View registered company profiles.</p>
+                    <a href="{{ url_for('admin_companies') }}" class="btn btn-primary" style="margin-top: 1rem; background-color: #6366f1;">Manage Companies</a>
+                </div>
+
+                <div class="action-card">
+                    <div class="action-icon">🚀</div>
+                    <h3>Add Placement Drive</h3>
+                    <p>Schedule upcoming placement drives.</p>
+                    <a href="{{ url_for('add_drive') }}" class="btn btn-primary" style="margin-top: 1rem;">Add Drive</a>
+                </div>
+
+                <div class="action-card">
+                    <div class="action-icon">🗓️</div>
+                    <h3>Manage Placement Drives</h3>
+                    <p>View scheduled placement drives.</p>
+                    <a href="{{ url_for('admin_drives') }}" class="btn btn-primary" style="margin-top: 1rem; background-color: #10b981;">Manage Drives</a>
+                </div>
+
+                <div class="action-card">
+                    <div class="action-icon">📋</div>
+                    <h3>View Applications</h3>
+                    <p>Review student job applications.</p>
+                    <a href="{{ url_for('admin_applications') }}" class="btn btn-primary" style="margin-top: 1rem; background-color: #8b5cf6;">View Applications</a>
+                </div>
+            </div>
+
+            <div class="cta-container">
+                <a href="{{ url_for('home') }}" class="btn btn-secondary">Back to Home</a>
+                {% if session.get('user_id') %}
+                    <a href="{{ url_for('logout') }}" class="btn btn-secondary">Logout</a>
+                {% endif %}
+            </div>
+        </main>
+
+        <footer class="footer">
+            <p>&copy; 2026 Smart Placement Tracker | Built with Flask &amp; CSS</p>
+        </footer>
+    </div>
+</body>
+</html>

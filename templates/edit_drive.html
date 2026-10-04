@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Edit Placement Drive</title><link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}"></head>
+<body><div class="container"><header class="header"><div class="badge">Placement Administration</div><h1>Edit Placement Drive</h1><p class="subtitle">Update drive details and eligibility criteria.</p></header>
+<main class="main-card form-card">{% if error %}<div class="alert alert-error">{{ error }}</div>{% endif %}
+<form action="{{ url_for('edit_drive', drive_id=drive_id) }}" method="POST" class="registration-form">
+<div class="form-group"><label for="company_id">Company *</label><select id="company_id" name="company_id" required>{% for comp in companies %}<option value="{{ comp.id }}" {% if form_data.get('company_id')|string == comp.id|string %}selected{% endif %}>{{ comp.company_name }}</option>{% endfor %}</select></div>
+<div class="form-group"><label for="job_role">Job Role *</label><input id="job_role" name="job_role" value="{{ form_data.get('job_role', '') }}" required></div>
+<div class="form-group"><label for="job_description">Job Description *</label><textarea id="job_description" name="job_description" rows="4" required>{{ form_data.get('job_description', '') }}</textarea></div>
+<div class="form-group"><label for="ctc">CTC / Package *</label><input id="ctc" name="ctc" value="{{ form_data.get('ctc', '') }}" required></div>
+<div class="form-row"><div class="form-group"><label for="minimum_cgpa">Minimum CGPA (0–10) *</label><input type="number" step="0.1" min="0" max="10" id="minimum_cgpa" name="minimum_cgpa" value="{{ form_data.get('minimum_cgpa', '') }}" required></div>
+<div class="form-group"><label for="graduation_year">Graduation Year *</label><input type="number" min="2020" max="2035" id="graduation_year" name="graduation_year" value="{{ form_data.get('graduation_year', '') }}" required></div></div>
+<div class="form-row"><div class="form-group"><label for="backlogs_allowed">Maximum Backlogs *</label><input type="number" min="0" max="20" id="backlogs_allowed" name="backlogs_allowed" value="{{ form_data.get('backlogs_allowed', '') }}" required></div>
+<div class="form-group"><label for="application_deadline">Application Deadline *</label><input type="date" id="application_deadline" name="application_deadline" value="{{ form_data.get('application_deadline', '') }}" required></div></div>
+<div class="form-group"><label>Eligible Branches *</label><div class="checkbox-grid">{% for branch in allowed_branches %}<label class="checkbox-item"><input type="checkbox" name="eligible_branches" value="{{ branch }}" {% if branch in form_data.get('eligible_branches', []) %}checked{% endif %}> {{ branch }}</label>{% endfor %}</div></div>
+<div class="form-actions"><button class="btn btn-primary" type="submit">Save Placement Drive</button><a href="{{ url_for('admin_drives') }}" class="btn btn-secondary">Cancel</a></div>
+</form></main></div></body></html>

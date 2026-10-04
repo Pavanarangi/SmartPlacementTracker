@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Company Added Successfully - Smart Placement Tracker">
+    <title>Company Added - Smart Placement Tracker</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <div class="badge badge-success">Success</div>
+            <h1>Company Added Successfully!</h1>
+            <p class="subtitle">The company profile has been added to the temporary in-memory list.</p>
+        </header>
+
+        <main class="main-card form-card">
+            <h2>Registered Company Profile</h2>
+
+            <ul class="summary-list">
+                <li class="summary-item">
+                    <span class="summary-label">Company ID:</span>
+                    <span class="summary-value">#{{ company.id }}</span>
+                </li>
+                <li class="summary-item">
+                    <span class="summary-label">Company Name:</span>
+                    <span class="summary-value">{{ company.company_name }}</span>
+                </li>
+                <li class="summary-item">
+                    <span class="summary-label">Description:</span>
+                    <span class="summary-value">{{ company.description }}</span>
+                </li>
+                <li class="summary-item">
+                    <span class="summary-label">Website:</span>
+                    <span class="summary-value">
+                        {% if company.website %}
+                            <a href="{{ company.website }}" target="_blank" style="color: var(--badge-text);">{{ company.website }}</a>
+                        {% else %}
+                            <span style="color: var(--text-secondary);">Not Provided</span>
+                        {% endif %}
+                    </span>
+                </li>
+            </ul>
+
+            <div class="form-actions" style="margin-top: 2rem;">
+                <a href="{{ url_for('add_company') }}" class="btn btn-primary">Add Another Company</a>
+                <a href="{{ url_for('admin') }}" class="btn btn-secondary">Back to Admin Dashboard</a>
+            </div>
+        </main>
+
+        <footer class="footer">
+            <p>&copy; 2026 Smart Placement Tracker | Built with Flask &amp; CSS</p>
+        </footer>
+    </div>
+</body>
+</html>

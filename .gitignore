@@ -1,0 +1,24 @@
+# Python / Flask
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+env/
+venv/
+ENV/
+
+# Environment Variables & Credentials
+.env
+.env.local
+serviceAccountKey.json
+service-account*.json
+firebase-credentials.json
+
+# IDE & OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Project Checkpoints & Backups
+backups/

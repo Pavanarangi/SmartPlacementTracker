@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Placement Drive Details</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+<div class="container">
+    <header class="header"><div class="badge">Placement Drive</div><h1>{{ drive.job_role if drive else 'Drive Details' }}</h1></header>
+    <main class="main-card">
+        {% if error %}<div class="alert alert-error">{{ error }}</div>{% endif %}
+        {% if drive %}
+        <h2>{{ drive.company_name }}</h2>
+        <p>{{ drive.job_description }}</p>
+        <div class="drive-specs-grid">
+            <div class="spec-item"><span class="spec-label">CTC / Package</span><span class="spec-value">{{ drive.ctc }}</span></div>
+            <div class="spec-item"><span class="spec-label">Minimum CGPA</span><span class="spec-value">{{ drive.minimum_cgpa }}</span></div>
+            <div class="spec-item"><span class="spec-label">Eligible Branches</span><span class="spec-value">{{ drive.eligible_branches | join(', ') }}</span></div>
+            <div class="spec-item"><span class="spec-label">Graduation Year</span><span class="spec-value">{{ drive.graduation_year }}</span></div>
+            <div class="spec-item"><span class="spec-label">Maximum Backlogs</span><span class="spec-value">{{ drive.backlogs_allowed }}</span></div>
+            <div class="spec-item"><span class="spec-label">Application Deadline</span><span class="spec-value">{{ drive.application_deadline or 'Not specified' }}</span></div>
+        </div>
+        <div style="margin-top:1.5rem">
+            {% if already_applied %}<p>You have applied. Current status: <strong>{{ application_status }}</strong></p>
+            {% elif not drive.is_open %}<p>Deadline passed. Applications are closed.</p>
+            {% elif is_eligible %}<form action="{{ url_for('apply_drive', drive_id=drive.id) }}" method="POST"><button class="btn btn-primary" type="submit">Apply Now</button></form>
+            {% else %}<p>You are not eligible:</p><ul>{% for reason in reasons %}<li>{{ reason }}</li>{% endfor %}</ul>{% endif %}
+        </div>
+        {% endif %}
+        <div class="cta-container" style="margin-top:2rem"><a href="{{ url_for('student_drives') }}" class="btn btn-secondary">Back to Placement Drives</a><a href="{{ url_for('student_applications') }}" class="btn btn-secondary">My Applications</a></div>
+    </main>
+</div>
+</body>
+</html>

@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Drive Added Successfully - Smart Placement Tracker">
+    <title>Placement Drive Added - Smart Placement Tracker</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <div class="badge badge-success">Success</div>
+            <h1>Placement Drive Added Successfully!</h1>
+            <p class="subtitle">The new placement drive has been created and stored in temporary memory.</p>
+        </header>
+
+        <main class="main-card form-card">
+            <h2>Placement Drive Details</h2>
+
+            <ul class="summary-list">
+                <li class="summary-item">
+                    <span class="summary-label">Drive ID:</span>
+                    <span class="summary-value">#{{ drive.id }}</span>
+                </li>
+                <li class="summary-item">
+                    <span class="summary-label">Company Name:</span>
+                    <span class="summary-value">{{ drive.company_name }}</span>
+                </li>
+                <li class="summary-item">
+                    <span class="summary-label">Job Role:</span>
+                    <span class="summary-value">{{ drive.job_role }}</span>
+                </li>
+                <li class="summary-item">
+                    <span class="summary-label">CTC / Package:</span>
+                    <span class="summary-value">{{ drive.ctc }}</span>
+                </li>
+                <li class="summary-item">
+                    <span class="summary-label">Job Description:</span>
+                    <span class="summary-value">{{ drive.job_description }}</span>
+                </li>
+                <li class="summary-item">
+                    <span class="summary-label">Minimum CGPA:</span>
+                    <span class="summary-value">{{ drive.minimum_cgpa }}</span>
+                </li>
+                <li class="summary-item">
+                    <span class="summary-label">Eligible Branches:</span>
+                    <span class="summary-value">{{ drive.eligible_branches | join(', ') }}</span>
+                </li>
+                <li class="summary-item">
+                    <span class="summary-label">Graduation Year:</span>
+                    <span class="summary-value">{{ drive.graduation_year }}</span>
+                </li>
+                <li class="summary-item">
+                    <span class="summary-label">Backlogs Allowed:</span>
+                    <span class="summary-value">{{ drive.backlogs_allowed }}</span>
+                </li>
+                <li class="summary-item">
+                    <span class="summary-label">Application Deadline:</span>
+                    <span class="summary-value">{{ drive.application_deadline }}</span>
+                </li>
+            </ul>
+
+            <div class="form-actions" style="margin-top: 2rem;">
+                <a href="{{ url_for('add_drive') }}" class="btn btn-primary">Add Another Drive</a>
+                <a href="{{ url_for('admin') }}" class="btn btn-secondary">Back to Admin Dashboard</a>
+            </div>
+        </main>
+
+        <footer class="footer">
+            <p>&copy; 2026 Smart Placement Tracker | Built with Flask &amp; CSS</p>
+        </footer>
+    </div>
+</body>
+</html>

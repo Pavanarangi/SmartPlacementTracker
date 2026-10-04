@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Registration Confirmation - Smart Placement Tracker">
+    <title>Registration Confirmation - Smart Placement Tracker</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <div class="badge badge-success">Registration Received</div>
+            <h1>Data Received Successfully!</h1>
+            <p class="subtitle">Flask successfully parsed the POST request submitted from your registration form.</p>
+        </header>
+
+        <main class="main-card form-card">
+            <h2>Submitted Student Profile</h2>
+            <p>Here are the details received by Flask via <code>request.form</code>:</p>
+
+            <ul class="summary-list">
+                <li class="summary-item">
+                    <span class="summary-label">Full Name:</span>
+                    <span class="summary-value">{{ student.full_name }}</span>
+                </li>
+                <li class="summary-item">
+                    <span class="summary-label">Email Address:</span>
+                    <span class="summary-value">{{ student.email }}</span>
+                </li>
+                <li class="summary-item">
+                    <span class="summary-label">Branch:</span>
+                    <span class="summary-value">{{ student.branch }}</span>
+                </li>
+                <li class="summary-item">
+                    <span class="summary-label">CGPA:</span>
+                    <span class="summary-value">{{ student.cgpa }}</span>
+                </li>
+                <li class="summary-item">
+                    <span class="summary-label">Graduation Year:</span>
+                    <span class="summary-value">{{ student.graduation_year }}</span>
+                </li>
+                <li class="summary-item">
+                    <span class="summary-label">Number of Backlogs:</span>
+                    <span class="summary-value">{{ student.backlogs }}</span>
+                </li>
+            </ul>
+
+            <div class="form-actions" style="margin-top: 2rem;">
+                <a href="{{ url_for('register') }}" class="btn btn-primary">Register Another Student</a>
+                <a href="{{ url_for('home') }}" class="btn btn-secondary">Back to Home</a>
+            </div>
+        </main>
+
+        <footer class="footer">
+            <p>&copy; 2026 Smart Placement Tracker | Built with Flask &amp; CSS</p>
+        </footer>
+    </div>
+</body>
+</html>
